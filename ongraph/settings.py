@@ -136,9 +136,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #     'DEFAULT_AUTHENTICATION_CLASSES': (
 
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#          'rest_framework.permissions.AllowAny',
 #     )
     
 # }
+
 # DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

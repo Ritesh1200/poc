@@ -16,16 +16,17 @@ class Login(APIView):
     @csrf_exempt
     def post(self, request, format=None):
         data = self.request.data
-
+        if request.user == "AnonymousUser" :
+            return Response({"stat" : "User is already logged in"})
         username = data.get('username', None)
         password = data.get('password', None)
         user =  auth.authenticate(username=username, password=password)
         if user is not None:
             auth.login(request, user)
 
-            return Response({"status" : "User logged in"} , status=status.HTTP_200_OK)
+            return Response({"stat" : "User logged in"} , status=status.HTTP_200_OK)
         else:
-            return Response({"status" : "User not found"},status=status.HTTP_404_NOT_FOUND)
+            return Response({"stat" : "User not found"},status=status.HTTP_404_NOT_FOUND)
 
 class Registration(APIView):
 
@@ -35,7 +36,7 @@ class Registration(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response({"status":"user created"},serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
@@ -45,6 +46,8 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
+        if not request.user :
+            return Response({"stat" : "please login first"} , status=status.HTTP_200_OK)
         auth.logout(request)
         return Response({"status":"user logged out"},status=status.HTTP_200_OK)
 
